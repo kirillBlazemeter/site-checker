@@ -4,59 +4,40 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from grail import BaseTest
-# import ConfigParser
 import sys
 
-page_elements = {"/": ['#get_started_button_top'],
-                 "/features": ['#features_page_image_right>img'],
-                 "/pricing": ['.billed-annually'], "/why-we-blaze": ['#we_blaze_top_image>p'],
-                 "/blog": ['.field-content>a'], "/performance": ['.pub_category>a[href$="616"]'],
-                 "/blogs-on-author/669": ['.new-blog-author-linkedin[href$=dmitritikhanski]'],
+page_elements = {"/": ['#get_started_button_top', 'START TESTING NOW'],
+                 "/features": ['#features_page_text_left>h3', '100% Compatible with JMeter'],
+                 "/pricing": ['.billed-annually', '1 Year (discounted)'],
+                 "/why-we-blaze": ['#we_blaze_top_image>p', 'Performance testing has changed.'],
+                 "/blog": ['.more-link', 'Read more...'],
+                 "/performance": ['.pub_category>a[href$="616"', 'Performance Testing'],
+                 "/blogs-on-author/669": ['.blog_author_block>p>a', 'Dmitri Tikhanski'],
                  "/blog/how-run-external-commands-and-programs-locally-and-remotely-jmeter":
-                     ['.new_blog_get_started_button'], "/search/node/test%20type%3Ablog":
-                     ['#main__content--responsive>h2>span'], "/support": ['#search_button_support_page'],
-                 "/about": ['[href$=alongirmonsky]'], "/customers": ['[href$=ticketfly]'],
-                 "/partners": ['#become-partner'], "/join-our-team": ['.job-expander'],
-                 "/usecases": ['#f1'], "/personas?devops": ['#devops>img'], "/personas?perfomance":
-                     ['#perfomance>img'], "/contact-us": ['a[href$=tab-1]'], "/terms-service":
-                     ['.field-item.even>h2'], "/privacy-policy": ['.field-item.even>h2'],
-                 "/third-party-licences": ['.field-item.even>h2']}
+                     ['.block-title', 'You might also find these useful:'], "/search/node/test%20type%3Ablog":
+                     ['#main__content--responsive>h2', 'Search Results for'], "/support":
+                     ['#support_opacity_layer>p', 'We\'re here to ensure your success.'],
+                 "/about": ['.leader_info>h1', 'Alon Girmonsky'], "/customers": ['[href$=ticketfly]', 'READ MORE'],
+                 "/partners": ['.region.region-content-left>h2', 'ECOSYSTEMS'],
+                 "/join-our-team": ['.view-content>h3', 'DEVELOPMENT'],
+                 "/usecases": ['#f1', 'PERFORMANCE TESTING'], "/personas?devops": ['.personas_info>h1>span', 'Frank'],
+                 "/contact-us": ['a[href$=tab-1]', 'SALES'], "/terms-service":
+                     ['.field-item.even>h2', 'BLAZEMETER TERMS OF USE'],
+                 "/privacy-policy": ['.field-item.even>h2', 'BLAZEMETER PRIVACY POLICY'],
+                 "/third-party-licences": ['.field-item.even>h2', "Software License Acknowledgements"]}
 
-# config = ConfigParser.RawConfigParser()
+driver_param = ''
 
 
 class SiteTest(BaseTest):
-    # global driver
-    # @classmethod
-    # def setUpClass(cls):
-    # path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__))))
-    # mobile_emulation = {"deviceName": "Apple iPhone 4"}
-    # chrome_options = Options()
-    # chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
-    # config.read(os.path.join(path, 'settings.properties'))
-    # cls.url = config.get('urlSection', 'site_url')
-    # cls.url = sys.argv[1]
-
-
-    # driver_param = config.get('BrowserSection', 'browser')
-    # if driver_param.__eq__("Chrome"):
-    #     cls.driver = webdriver.Chrome()
-    #     cls.driver.implicitly_wait(30)
-    #     cls.driver.set_window_size(1920, 1080)
-    # elif driver_param.__eq__("iPhone4"):
-    #      cls.driver = webdriver.Chrome(chrome_options=chrome_options)
-    #      cls.driver.implicitly_wait(30)
-    #      page_elements["/"] = ['#top_button']
-    # elif driver_param.__eq__("Firefox"):
-    #     cls.driver = webdriver.Firefox()
-    #     cls.driver.implicitly_wait(30)
-    #     cls.driver.set_window_size(1920, 1080)
     def test(self):
         env = sys.argv[1]
         if env.__eq__('prod'):
             self.url = "https://blazemeter.com"
         elif env.__eq__('qa'):
             self.url = "https://wwwqa.blazemeter.com"
+        elif env.__eq__('dev'):
+            self.url = "https://wwwdev.blazemeter.com"
         else:
             self.url = "https://wwwqa.blazemeter.com"
         for i in range(2, len(sys.argv)):
@@ -71,7 +52,14 @@ class SiteTest(BaseTest):
                 chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
                 self.driver = webdriver.Chrome(chrome_options=chrome_options)
                 self.driver.implicitly_wait(30)
-                page_elements["/"] = ['#top_button']
+                page_elements["/"] = ['#top_button', 'START TESTING NOW']
+            elif driver_param.__eq__("iPhone5"):
+                mobile_emulation = {"deviceName": "Apple iPhone 5"}
+                chrome_options = Options()
+                chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
+                self.driver = webdriver.Chrome(chrome_options=chrome_options)
+                self.driver.implicitly_wait(30)
+                page_elements["/"] = ['#top_button', 'START TESTING NOW']
             elif driver_param.__eq__("Firefox"):
                 self.driver = webdriver.Firefox()
                 self.driver.implicitly_wait(30)
@@ -83,13 +71,15 @@ class SiteTest(BaseTest):
             self.over_check(self.driver)
             self.driver.quit()
 
-
     def over_check(self, driver):
-        for url in page_elements.keys():
-            driver.get(self.url + url)
-            for element in page_elements.get(url):
-                driver.find_element(By.CSS_SELECTOR, element).is_displayed(), "Element is absent on the page"
-
-    # classmethod
-    # def tearDownClass(self):
-    #     self.driver.quit()
+        try:
+            for url in page_elements.keys():
+                if not (url.__contains__('/personas')) and not (
+                    driver_param.__eq__("iPhone4") or driver_param.__eq__("iPhone5")):
+                    driver.get(self.url + url)
+                    locator = page_elements.get(url)
+                    driver.find_element(By.CSS_SELECTOR, locator[0]).is_displayed(), "Element is absent on the page!"
+                    assert driver.find_element(By.CSS_SELECTOR, locator[0]).text.__eq__(locator[1]), "Text is wrong!"
+        except:
+            self.driver.quit()
+            raise Exception("There is no such element")
