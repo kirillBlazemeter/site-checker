@@ -46,6 +46,7 @@ class SiteTest(BaseTest):
                 self.driver = webdriver.Chrome()
                 self.driver.implicitly_wait(30)
                 self.driver.set_window_size(1920, 1080)
+                page_elements["/"] = ['#get_started_button_top', 'START TESTING NOW']
             elif driver_param.__eq__("iPhone4"):
                 mobile_emulation = {"deviceName": "Apple iPhone 4"}
                 chrome_options = Options()
@@ -64,6 +65,7 @@ class SiteTest(BaseTest):
                 self.driver = webdriver.Firefox()
                 self.driver.implicitly_wait(30)
                 self.driver.set_window_size(1920, 1080)
+                page_elements["/"] = ['#get_started_button_top', 'START TESTING NOW']
             else:
                 self.driver = webdriver.Firefox()
                 self.driver.implicitly_wait(30)
@@ -76,10 +78,10 @@ class SiteTest(BaseTest):
             for url in page_elements.keys():
                 if not (url.__contains__('/personas')) and not (
                     driver_param.__eq__("iPhone4") or driver_param.__eq__("iPhone5")):
-                    driver.get(self.url + url)
-                    locator = page_elements.get(url)
-                    driver.find_element(By.CSS_SELECTOR, locator[0]).is_displayed(), "Element is absent on the page!"
-                    assert driver.find_element(By.CSS_SELECTOR, locator[0]).text.__eq__(locator[1]), "Text is wrong!"
+                     driver.get(self.url + url)
+                     locator = page_elements.get(url)
+                     driver.find_element(By.CSS_SELECTOR, locator[0]).is_displayed(), "Element is absent on the page!"
+                     assert driver.find_element(By.CSS_SELECTOR, locator[0]).text.__eq__(locator[1]), "Text is wrong!"
         except:
             self.driver.quit()
             raise Exception("There is no such element")
