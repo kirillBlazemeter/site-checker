@@ -4,8 +4,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from grail import BaseTest
-import ConfigParser
-import os
+# import ConfigParser
+import sys
 
 page_elements = {"/": ['#get_started_button_top'],
                  "/features": ['#features_page_image_right>img'],
@@ -22,36 +22,67 @@ page_elements = {"/": ['#get_started_button_top'],
                      ['.field-item.even>h2'], "/privacy-policy": ['.field-item.even>h2'],
                  "/third-party-licences": ['.field-item.even>h2']}
 
-config = ConfigParser.RawConfigParser()
+# config = ConfigParser.RawConfigParser()
 
 
 class SiteTest(BaseTest):
-    global driver
+    # global driver
+    # @classmethod
+    # def setUpClass(cls):
+    # path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__))))
+    # mobile_emulation = {"deviceName": "Apple iPhone 4"}
+    # chrome_options = Options()
+    # chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
+    # config.read(os.path.join(path, 'settings.properties'))
+    # cls.url = config.get('urlSection', 'site_url')
+    # cls.url = sys.argv[1]
 
-    @classmethod
-    def setUpClass(cls):
-        path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__))))
-        mobile_emulation = {"deviceName": "Apple iPhone 4"}
-        chrome_options = Options()
-        chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
-        config.read(os.path.join(path, 'settings.properties'))
-        cls.url = config.get('urlSection', 'site_url')
-        driver_param = config.get('BrowserSection', 'browser')
-        if driver_param.__eq__("Chrome"):
-            cls.driver = webdriver.Chrome()
-            cls.driver.implicitly_wait(30)
-            cls.driver.set_window_size(1920, 1080)
-        elif driver_param.__eq__("iPhone4"):
-             cls.driver = webdriver.Chrome(chrome_options=chrome_options)
-             cls.driver.implicitly_wait(30)
-             page_elements["/"] = ['#top_button']
-        elif driver_param.__eq__("Firefox"):
-            cls.driver = webdriver.Firefox()
-            cls.driver.implicitly_wait(30)
-            cls.driver.set_window_size(1920, 1080)
 
-    def test_over_(self):
-        self.over_check(self.driver)
+    # driver_param = config.get('BrowserSection', 'browser')
+    # if driver_param.__eq__("Chrome"):
+    #     cls.driver = webdriver.Chrome()
+    #     cls.driver.implicitly_wait(30)
+    #     cls.driver.set_window_size(1920, 1080)
+    # elif driver_param.__eq__("iPhone4"):
+    #      cls.driver = webdriver.Chrome(chrome_options=chrome_options)
+    #      cls.driver.implicitly_wait(30)
+    #      page_elements["/"] = ['#top_button']
+    # elif driver_param.__eq__("Firefox"):
+    #     cls.driver = webdriver.Firefox()
+    #     cls.driver.implicitly_wait(30)
+    #     cls.driver.set_window_size(1920, 1080)
+    def test(self):
+        env = sys.argv[1]
+        if env.__eq__('prod'):
+            self.url = "https://blazemeter.com"
+        elif env.__eq__('qa'):
+            self.url = "https://wwwqa.blazemeter.com"
+        else:
+            self.url = "https://wwwqa.blazemeter.com"
+        for i in range(2, len(sys.argv)):
+            driver_param = sys.argv[i]
+            if driver_param.__eq__("Chrome"):
+                self.driver = webdriver.Chrome()
+                self.driver.implicitly_wait(30)
+                self.driver.set_window_size(1920, 1080)
+            elif driver_param.__eq__("iPhone4"):
+                mobile_emulation = {"deviceName": "Apple iPhone 4"}
+                chrome_options = Options()
+                chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
+                self.driver = webdriver.Chrome(chrome_options=chrome_options)
+                self.driver.implicitly_wait(30)
+                page_elements["/"] = ['#top_button']
+            elif driver_param.__eq__("Firefox"):
+                self.driver = webdriver.Firefox()
+                self.driver.implicitly_wait(30)
+                self.driver.set_window_size(1920, 1080)
+            else:
+                self.driver = webdriver.Firefox()
+                self.driver.implicitly_wait(30)
+                self.driver.set_window_size(1920, 1080)
+            self.over_check(self.driver)
+            self.driver.quit()
+
 
     def over_check(self, driver):
         for url in page_elements.keys():
@@ -59,6 +90,6 @@ class SiteTest(BaseTest):
             for element in page_elements.get(url):
                 driver.find_element(By.CSS_SELECTOR, element).is_displayed(), "Element is absent on the page"
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.driver.quit()
+    # classmethod
+    # def tearDownClass(self):
+    #     self.driver.quit()
