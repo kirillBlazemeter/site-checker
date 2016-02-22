@@ -31,15 +31,15 @@ driver_param = ''
 
 class SiteTest(BaseTest):
     def test(self):
-        env = sys.argv[1]
-        if env.__eq__('prod'):
-            self.url = "https://blazemeter.com"
-        elif env.__eq__('qa'):
-            self.url = "https://wwwqa.blazemeter.com"
-        elif env.__eq__('dev'):
-            self.url = "https://wwwdev.blazemeter.com"
+
+        if sys.argv[1].__eq__('prod'):
+            self.main_url = "https://blazemeter.com"
+        elif sys.argv[1].__eq__('qa'):
+            self.main_url = "https://wwwqa.blazemeter.com"
+        elif sys.argv[1].__eq__('dev'):
+            self.main_url = "https://wwwdev.blazemeter.com"
         else:
-            self.url = "https://wwwqa.blazemeter.com"
+            self.main_url = "https://wwwqa.blazemeter.com"
         for i in range(2, len(sys.argv)):
             driver_param = sys.argv[i]
             if driver_param.__eq__("Chrome"):
@@ -78,7 +78,7 @@ class SiteTest(BaseTest):
             for url in page_elements.keys():
                 if not (url.__contains__('/personas')) and not (
                     driver_param.__eq__("iPhone4") or driver_param.__eq__("iPhone5")):
-                     driver.get(self.url + url)
+                     driver.get(self.main_url + url)
                      locator = page_elements.get(url)
                      driver.find_element(By.CSS_SELECTOR, locator[0]).is_displayed(), "Element is absent on the page!"
                      assert driver.find_element(By.CSS_SELECTOR, locator[0]).text.__eq__(locator[1]), "Text is wrong!"
