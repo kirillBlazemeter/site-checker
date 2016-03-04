@@ -11,9 +11,9 @@ page_elements = {"/": ['#get_started_button_top', 'START TESTING NOW'],
                  "/pricing": ['.billed-annually', '1 Year (discounted)'],
                  "/why-we-blaze": ['#we_blaze_top_image>p', 'Performance testing has changed.'],
                  "/blog": ['.more-link', 'Read more...'],
-                 "/performance": ['.pub_category>a[href$="616"', 'Performance Testing'],
+                 "/performance": ['.pub_category>a[href$="616"]', 'Performance Testing'],
                  "/blogs-on-author/669": ['.blog_author_block>p>a', 'Dmitri Tikhanski'],
-                 "/blog/how-run-external-commands-and-programs-locally-and-remotely-jmeter":
+                 "/blog/view-webcast-load-testing-bootcamp":
                      ['.block-title', 'You might also find these useful:'], "/search/node/test%20type%3Ablog":
                      ['#main__content--responsive>h2', 'Search Results for'], "/support":
                      ['#support_opacity_layer>p', 'We\'re here to ensure your success.'],
