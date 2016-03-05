@@ -6,7 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from grail import BaseTest
 import sys
 
-page_elements = {"/": ['#get_started_button_top', 'START TESTING NOW'],
+page_elements = {"/": ['#try_it_now>a', 'TRY IT NOW'],
                  "/features": ['#features_page_text_left>h3', '100% Compatible with JMeter'],
                  "/pricing": ['.billed-annually', '1 Year (discounted)'],
                  "/why-we-blaze": ['#we_blaze_top_image>p', 'Performance testing has changed.'],
@@ -46,26 +46,33 @@ class SiteTest(BaseTest):
                 self.driver = webdriver.Chrome()
                 self.driver.implicitly_wait(30)
                 self.driver.set_window_size(1920, 1080)
-                page_elements["/"] = ['#get_started_button_top', 'START TESTING NOW']
+                page_elements["/"] = ['#try_it_now>a', 'TRY IT NOW']
             elif driver_param.__eq__("iPhone4"):
                 mobile_emulation = {"deviceName": "Apple iPhone 4"}
                 chrome_options = Options()
                 chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
                 self.driver = webdriver.Chrome(chrome_options=chrome_options)
                 self.driver.implicitly_wait(30)
-                page_elements["/"] = ['#top_button', 'START TESTING NOW']
+                page_elements["/"] = ['#mobile_version_try_it_now', 'TRY IT NOW']
             elif driver_param.__eq__("iPhone5"):
                 mobile_emulation = {"deviceName": "Apple iPhone 5"}
                 chrome_options = Options()
                 chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
                 self.driver = webdriver.Chrome(chrome_options=chrome_options)
                 self.driver.implicitly_wait(30)
-                page_elements["/"] = ['#top_button', 'START TESTING NOW']
+                page_elements["/"] = ['#mobile_version_try_it_now', 'TRY IT NOW']
             elif driver_param.__eq__("Firefox"):
                 self.driver = webdriver.Firefox()
                 self.driver.implicitly_wait(30)
                 self.driver.set_window_size(1920, 1080)
-                page_elements["/"] = ['#get_started_button_top', 'START TESTING NOW']
+                page_elements["/"] = ['#try_it_now>a', 'TRY IT NOW']
+            elif driver_param.__eq__("Nexus7"):
+                mobile_emulation = {"deviceName": "Google Nexus 7"}
+                chrome_options = Options()
+                chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
+                self.driver = webdriver.Chrome(chrome_options=chrome_options)
+                self.driver.implicitly_wait(30)
+                page_elements["/"] = ['#mobile_version_try_it_now', 'TRY IT NOW']
             else:
                 self.driver = webdriver.Firefox()
                 self.driver.implicitly_wait(30)
